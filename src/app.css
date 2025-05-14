@@ -2,7 +2,7 @@
 
 html,
 body {
-    @apply h-full overflow-auto dark:bg-gray-950 dark:text-white bg-[url("/Pool_Party_WR_Promo_01.jpg")] bg-cover bg-center
+    @apply dark:bg-gray-950 dark:text-white bg-[url("/Pool_Party_WR_Promo_01.jpg")] bg-cover bg-center
 }
 
 @theme inline {
