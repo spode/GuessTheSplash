@@ -3,6 +3,6 @@
 	let { children } = $props();
 </script>
 
-<div class="container mx-auto flex flex-col items-center gap-8">
+<div class="mx-auto max-w-6xl rounded-xl border-white/60 bg-white/70 py-12">
 	{@render children()}
 </div>

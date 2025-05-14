@@ -1,1 +1,25 @@
 @import 'tailwindcss';
+
+html,
+body {
+    @apply h-full overflow-auto dark:bg-gray-950 dark:text-white bg-[url("Pool_Party_WR_Promo_01.jpg")] bg-cover bg-center
+}
+
+@theme inline {
+    --color-primary: var(--color-red-200);
+    --color-secondary: var(--color-orange-200);
+}
+
+@media (prefers-color-scheme: dark) {
+    @theme inline {
+        --color-primary: var(--color-red-400);
+        --color-secondary: var(--color-orange-400);
+    }
+}
+
+
+@layer components {
+    .btn-primary {
+        /* @apply bg-primary text-white cursor-pointer */
+    }
+}
