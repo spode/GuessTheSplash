@@ -110,9 +110,9 @@
 	<div class="flex flex-col items-center justify-center gap-4 lg:flex-row">
 		<button
 			onclick={fetchRandomChampData}
-			class="cursor-pointer rounded bg-lime-500 px-8 py-2 font-semibold text-black transition-colors duration-300 ease-in-out dark:bg-gray-700"
-			>new random skin</button
-		><label for="" class="rounded bg-lime-500 px-4 py-2 font-semibold">
+			class="cursor-pointer rounded bg-sky-500 px-8 py-2 font-semibold text-white shadow transition-colors duration-300 ease-in-out dark:bg-gray-700"
+			>Skip</button
+		><label for="" class="rounded bg-sky-500 px-4 py-2 font-semibold text-white shadow-xl">
 			<input type="checkbox" bind:checked={soundsEnabled} />
 			Sounds Enabled
 		</label>
@@ -122,9 +122,9 @@
 		<h1 class="text-4xl font-bold">{xxxSentence.join(' ') || 'placeholder'}</h1>
 	</div>
 	<form onsubmit={guessWord} class="mx-auto w-full max-w-md p-4">
-		<label class="flex gap-4">
+		<label class="flex justify-center gap-4">
 			<input
-				class="rounded-2xl bg-lime-500 px-4 py-2 font-semibold text-black focus:ring-2 focus:outline-none dark:bg-gray-700"
+				class="rounded-2xl bg-sky-500 px-4 py-2 font-semibold text-white shadow-xl focus:ring-2 focus:outline-none dark:bg-gray-700"
 				bind:this={myInputElement}
 				bind:value={userGuessString}
 				placeholder="Enter skin guess"
@@ -133,18 +133,18 @@
 			<input
 				type="submit"
 				value="Submit"
-				class="cursor-pointer rounded-2xl bg-lime-500 px-4 py-2 font-semibold text-black transition-colors duration-200 dark:bg-gray-700"
+				class="cursor-pointer rounded-2xl bg-sky-500 px-4 py-2 font-semibold text-white shadow-xl transition-colors duration-200 dark:bg-gray-700"
 			/>
 		</label>
 	</form>
 	<button
-		class="cursor-pointer rounded-2xl bg-lime-500 px-4 py-2 font-semibold text-black"
+		class="cursor-pointer rounded-2xl bg-sky-500 px-4 py-2 font-semibold text-white shadow-xl"
 		onclick={() => {
 			let hint = currentHints[Math.floor(Math.random() * currentHints.length)];
 
 			currentHints = currentHints.filter((element) => element !== hint);
 
 			alert(hint);
-		}}>Hint, please</button
+		}}>Hint, please!</button
 	>
 </div>
