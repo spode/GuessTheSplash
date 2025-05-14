@@ -110,9 +110,9 @@
 	<div class="flex flex-col items-center justify-center gap-4 lg:flex-row">
 		<button
 			onclick={fetchRandomChampData}
-			class="cursor-pointer rounded bg-lime-500 px-8 py-4 font-semibold text-black transition-colors duration-300 ease-in-out dark:bg-gray-700"
+			class="cursor-pointer rounded bg-lime-500 px-8 py-2 font-semibold text-black transition-colors duration-300 ease-in-out dark:bg-gray-700"
 			>new random skin</button
-		><label for="" class="bg-lime-500 px-4 py-4 font-semibold">
+		><label for="" class="rounded bg-lime-500 px-4 py-2 font-semibold">
 			<input type="checkbox" bind:checked={soundsEnabled} />
 			Sounds Enabled
 		</label>
