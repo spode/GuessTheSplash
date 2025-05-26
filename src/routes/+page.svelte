@@ -1,20 +1,25 @@
 <script lang="ts">
 	let { data } = $props();
-	import champions from '$lib/champion.json';
+
 	import { onMount } from 'svelte';
 
-	import audioFile from '../oakSounds/oak2.wav';
-	import audioFile2 from '../oakSounds/oak16.wav';
-	import audioFile3 from '../oakSounds/oak3.wav';
+	import perfectFile from '../oakSounds/oak16.wav';
+	import wowFile from '../oakSounds/oak2.wav';
+	import herePresentFile from '../oakSounds/oak3.wav';
 
-	let skinName = $state('Aatrox');
-	let champNames: string[] = Object.keys(champions.data);
+	let randomSkinName = $state('Aatrox');
+	let champNames: string[] = Object.keys(data.latestChampions.data);
 
-	let currentHints = $state([]);
+	let currentHints: string[] = $state([]);
+	export function delayed(value, ms = 500) {
+		return new Promise((f) => {
+			setTimeout(() => f(value), ms);
+		});
+	}
 
-	let audio;
-	let audio2;
-	let audio3;
+	let wowAudio: HTMLAudioElement,
+		perfectAudio: HTMLAudioElement,
+		herePresentAudio: HTMLAudioElement;
 
 	let randomChampName = $state('');
 	let userGuessString: string = $state('');
@@ -22,14 +27,12 @@
 	let xxxSentence: string[] = $state([]);
 	let myInputElement: HTMLInputElement | undefined = $state();
 
-	let fullWordGuess = $state(0);
-
 	let soundsEnabled = $state(true);
-	onMount(() => {
+	onMount(async () => {
+		wowAudio = new Audio(wowFile);
+		perfectAudio = new Audio(perfectFile);
+		herePresentAudio = new Audio(herePresentFile);
 		fetchRandomChampData();
-		audio = new Audio(audioFile);
-		audio2 = new Audio(audioFile2);
-		audio3 = new Audio(audioFile3);
 	});
 
 	// $inspect(data);
@@ -50,18 +53,22 @@
 
 			const jsonData = await response.json();
 			let skinsArr = jsonData.data[randomChampName].skins;
+
+			// remove default skin
 			if (skinsArr.length > 1) {
 				skinsArr = skinsArr.slice(1);
 			}
-			let skinData = skinsArr[Math.floor(Math.random() * skinsArr.length)];
-			imageUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${randomChampName}_${skinData.num}.jpg`;
-			skinName = skinData.name;
 
-			words = skinName.split(' '); // Split sentence into words
+			// pick a random skin object
+			let randomSkinData = skinsArr[Math.floor(Math.random() * skinsArr.length)];
+			imageUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${randomChampName}_${randomSkinData.num}.jpg`;
+			randomSkinName = randomSkinData.name;
+
+			words = randomSkinName.split(' '); // Split sentence into words
 			words.map((str) => str.replace(/[.,]/g, ''));
 
 			xxxSentence = words.map((word) => 'x'.repeat(word.length));
-			currentHints = skinName.toLowerCase().split(' ');
+			currentHints = randomSkinName.split(' ');
 		} catch (error) {
 			console.error(error.message);
 		}
@@ -87,38 +94,46 @@
 
 		if (soundsEnabled) {
 			if (words.length == count) {
-				audio2.play();
+				perfectAudio.play();
 			} else if (count > 0) {
-				audio.play();
+				wowAudio.play();
 			}
 		}
 		userGuessString = '';
 		setTimeout(() => {
-			myInputElement.focus();
+			myInputElement?.focus();
 		}, 200);
 
-		if (xxxSentence.join(' ') == skinName) {
+		if (xxxSentence.join(' ') == randomSkinName) {
 			setTimeout(() => {
-				if (soundsEnabled) audio3.play();
+				if (soundsEnabled) herePresentAudio.play();
 				fetchRandomChampData();
 			}, 2000);
 		}
 	}
 </script>
 
-<div class="h-full gap-4 space-y-8 text-center">
+<div class="h-full w-2xl flex-col space-y-8 bg-white/40 text-center">
+	<h2 class="text-5xl font-bold text-white text-shadow-lg text-shadow-sky-500">Guess the Skin!</h2>
 	<div class="flex flex-col items-center justify-center gap-4 lg:flex-row">
 		<button
-			onclick={fetchRandomChampData}
-			class="cursor-pointer rounded bg-sky-500 px-8 py-2 font-semibold text-white shadow transition-colors duration-300 ease-in-out dark:bg-gray-700"
+			onclick={() => {
+				fetchRandomChampData();
+			}}
+			class="cursor-pointer rounded bg-sky-500 px-8 py-2 font-semibold text-white shadow-lg transition-colors duration-300 ease-in-out dark:bg-gray-700"
 			>Skip</button
-		><label for="" class="rounded bg-sky-500 px-4 py-2 font-semibold text-white shadow-xl">
-			<input type="checkbox" bind:checked={soundsEnabled} />
-			Sounds Enabled
-		</label>
+		>
+		<div class="block rounded bg-sky-500 px-4 py-2">
+			<div>
+				<label class="inline-flex items-center font-semibold text-white select-none">
+					<input type="checkbox" class="accent-white" bind:checked={soundsEnabled} />
+					<span class="ml-2">Enable sounds</span>
+				</label>
+			</div>
+		</div>
 	</div>
 	<div class="champ flex flex-col items-center text-center">
-		<img title={skinName} class="w-40 xl:w-72" src={imageUrl} alt="" />
+		<img title={randomSkinName} class="w-40 xl:w-72" src={imageUrl} alt="" />
 		<h1 class="text-4xl font-bold">{xxxSentence.join(' ') || 'placeholder'}</h1>
 	</div>
 	<form onsubmit={guessWord} class="mx-auto w-full max-w-md p-4">
@@ -140,11 +155,9 @@
 	<button
 		class="cursor-pointer rounded-2xl bg-sky-500 px-4 py-2 font-semibold text-white shadow-xl"
 		onclick={() => {
-			let hint = currentHints[Math.floor(Math.random() * currentHints.length)];
-
-			currentHints = currentHints.filter((element) => element !== hint);
-
-			alert(hint);
-		}}>Hint, please!</button
+			let randomWord = currentHints[Math.floor(Math.random() * currentHints.length)];
+			currentHints = currentHints.filter((element) => element !== randomWord);
+			alert(randomWord);
+		}}>Hint please!</button
 	>
 </div>

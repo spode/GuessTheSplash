@@ -4,7 +4,7 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "title guessthechamp localhost:9343/icons && vite dev --port 9343 --host",
+		"dev": "title guessthechamp localhost:9343/guessthesplash && vite dev --port 9343 --host",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
